@@ -5,7 +5,7 @@ A Twitter boost displaying the ratio of comments/retweets/likes to engagement.
 Modify the config at the top of [script.js](./script.js) to select the format and which metrics to display
 the ratios for.
 
-### Percentage Format
+### Percentage Format (Default)
 ![screenshot-percentage](assets/percent.png)
 
 ## Ratio Format

@@ -8,8 +8,8 @@ const Format = {
 const CONFIG = {
     // Which metrics the view ratios should be enabled for
     Comments: true,
-    Retweets: false,
-    Likes: false,
+    Retweets: true,
+    Likes: true,
 
     // Specifies the formatting of the metric.
     Format: Format.Percentage,
