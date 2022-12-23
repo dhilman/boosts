@@ -12,7 +12,7 @@ const CONFIG = {
     Likes: false,
 
     // Specifies the formatting of the metric.
-    Format: Format.Ratio,
+    Format: Format.Percentage,
 }
 
 // Debug logging
