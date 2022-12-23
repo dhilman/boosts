@@ -1,4 +1,3 @@
-
 const Format = {
     Percentage: 0, // e.g. 0.42%
     Ratio: 1  // e.g. 1/238
@@ -63,13 +62,13 @@ function createRatioSpan(ratio) {
  * @param {string} name - metric name
  */
 function addRatio(views, el, name) {
-    if ((el?.textContent || "") === "") {
-        if (DEBUG) console.log(`No ${name} count found for element: ${el.id}`)
+    if (!el || !el?.textContent || el?.textContent === "") {
+        if (DEBUG) console.log(`No ${name} count found for element: ${el?.id}`)
         return
     }
     const textEl = el.firstChild?.firstChild?.childNodes[1]?.firstChild?.firstChild
     if (!textEl) {
-        if (DEBUG) console.log(`Necessary child element not found ${name} ${el.id}`)
+        if (DEBUG) console.log(`Necessary child element not found ${name} ${el?.id}`)
         return
     }
     const count = textEl.firstChild.textContent
@@ -104,10 +103,32 @@ function addMetricRatios(el) {
     if (CONFIG.Likes) addRatio(views, children[3], "likes")
 }
 
+function addMetricRatioForMainTweet() {
+    const el = document.querySelector(".r-2sztyj")
+    if (!el) {
+        if (DEBUG) console.log("No main tweet element found")
+        return
+    }
+    const children = el.children
+    if (children.length < 3) {
+        if (DEBUG) console.log(`Not enough children on main tweet: ${children.length} ${el.id}`)
+        return
+    }
+    const views = children[0]?.firstChild?.firstChild?.children[0]?.firstChild?.firstChild?.textContent
+    if (!views || views === "") {
+        if (DEBUG) console.log(`No view count found for element: ${el.id}`)
+        return
+    }
+    for (let i = 1; i < children.length; i++) {
+        addRatio(views, children[i], `main tweet ${i}`)
+    }
+}
+
 function addMetricRatiosForAll() {
     const elements = document.querySelectorAll(".r-1ta3fxp")
     if (DEBUG) console.log(`Found ${elements.length} elements`)
     elements.forEach(addMetricRatios)
 }
 
+setInterval(addMetricRatioForMainTweet, 2000)
 setInterval(addMetricRatiosForAll, 4000)
