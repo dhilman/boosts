@@ -7,6 +7,8 @@ These extensions (Boosts) can also be enabled to only run on a specific website.
 
 Currently, Arc doesn't feature an extension store so manual copy and paste is required (see [installation](#installation))
 
+- [Twitter Enable Picture-in-Picture](./twitter-picture-in-picture/script.js) - twitter videos will play in picture-in-picture mode
+  once unmuted.
 - [Twitter Metric Ratios](./twitter-metric-ratios/README.md) - display ratio of comments/retweets/likes to engagement
   - ![screenshot-percentage](./twitter-metric-ratios/assets/percent.png)
 
