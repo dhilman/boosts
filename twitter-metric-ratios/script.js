@@ -104,22 +104,31 @@ function addMetricRatios(el) {
 }
 
 function addMetricRatioForMainTweet() {
-    const el = document.querySelector(".r-2sztyj")
-    if (!el) {
-        if (DEBUG) console.log("No main tweet element found")
+    const viewNodeClass = ".r-1b43r93"
+    const metricsNodeClass = ".r-1dgieki"
+
+    const viewNode = document.querySelector(viewNodeClass)
+    if (!viewNode) {
+        if (DEBUG) console.log(`No view node found: ${viewNodeClass}`)
         return
     }
-    const children = el.children
-    if (children.length < 3) {
-        if (DEBUG) console.log(`Not enough children on main tweet: ${children.length} ${el.id}`)
-        return
-    }
-    const views = children[0]?.firstChild?.firstChild?.children[0]?.firstChild?.firstChild?.textContent
+    const views = viewNode.textContent
     if (!views || views === "") {
-        if (DEBUG) console.log(`No view count found for element: ${el.id}`)
+        if (DEBUG) console.log(`No view count found for element: ${viewNodeClass}`)
         return
     }
-    for (let i = 1; i < children.length; i++) {
+
+    const metricsListNode = document.querySelector(metricsNodeClass)
+    if (!metricsListNode) {
+        if (DEBUG) console.log(`No metrics node found: ${metricsNodeClass}`)
+        return
+    }
+    const children = metricsListNode.children
+    if (children.length < 1) {
+        if (DEBUG) console.log(`Not enough metrics: ${children.length} ${metricsNodeClass}`)
+        return
+    }
+    for (let i = 0; i < children.length; i++) {
         addRatio(views, children[i], `main tweet ${i}`)
     }
 }
