@@ -1,12 +1,13 @@
 
 /**
- * getUniqueClass returns the first class name that does not occur on any other HTML elements.
+ * Returns all class names of the node that do not occur on any other HTML elements.
  *
  * @param {Node} node - The HTML Node to check for unique class names
- * @return {String | null} uniqueClass - The first unique class name found or an empty string if none exist
+ * @return {String[]} uniqueClasses
  */
-function getUniqueClass(node) {
+function getAllUniqueClasses(node) {
     const allElements = document.getElementsByTagName("*");
+    const uniqueClasses = []
     const nodeClasses = node.classList;
 
     for (let i = 0; i < nodeClasses.length; i++) {
@@ -22,56 +23,59 @@ function getUniqueClass(node) {
         }
 
         if (isUnique) {
-            return currentClass;
+            uniqueClasses.push(currentClass)
         }
     }
 
-    return null;
+    return uniqueClasses;
 }
 
 /**
- * getUniqueClassOnNodeOrParents checks if the node has a unique class name, if not checks the parent node.
+ * Attempts to find a node with unique class names up the tree from the provided node.
+ * Returns the unique class names and the node that the classes are on.
  *
  * @param {Node} node
  * @returns {[String, Node] | null} - [uniqueClassName, node] or null if no unique class name exists on any of the parents
  */
-function getUniqueClassOnNodeOrParents(node) {
-    const uniqueClass = getUniqueClass(node)
-    if (uniqueClass) {
-        return [uniqueClass, node]
+function getAllUniqueClassOnNodeOrParents(node) {
+    const uniqueClasses = getAllUniqueClasses(node)
+    if (uniqueClasses.length > 0) {
+        return [uniqueClasses, node]
     }
     if (node.parentElement) {
-        return getUniqueClassOnNodeOrParents(node.parentElement)
+        return getAllUniqueClassOnNodeOrParents(node.parentElement)
     }
     return null
 }
 
 /**
- * getLeadingClass returns the class name that if used to query the HTML document
+ * Returns the class name that if used to query the HTML document
  * will contain the node in the 0th index of the HTMLCollection.
  *
  * @param node
- * @returns {string | null}
+ * @returns {String[]}
  */
-function getLeadingClass(node) {
+function getAllLeadingClasses(node) {
     const nodeClasses = node.classList;
+    const leadingClasses = []
     for (let i = 0; i < nodeClasses.length; i++) {
         const currentClass = nodeClasses[i];
         const allElements = document.getElementsByClassName(currentClass);
         if (allElements.length === 1) {
-            return currentClass
+            leadingClasses.push(currentClass)
+            continue
         }
         if (allElements[0] === node) {
-            return currentClass
+            leadingClasses.push(currentClass)
         }
     }
-    return null
+    return leadingClasses
 }
 
-function getLeadingClassOnNodeOrParents(node) {
-    const leadingClass = getLeadingClass(node)
-    if (leadingClass) {
-        return [leadingClass, node]
+function getAllLeadingClassOnNodeOrParents(node) {
+    const leadingClasses = getAllLeadingClasses(node)
+    if (leadingClasses.length > 0) {
+        return [leadingClasses, node]
     }
     if (node.parentElement) {
         return getLeadingClassOnNodeOrParents(node.parentElement)

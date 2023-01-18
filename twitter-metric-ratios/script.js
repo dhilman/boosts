@@ -5,6 +5,9 @@ const Format = {
 
 // Config
 const CONFIG = {
+    // If set to true the raw metric values will be outright replaced with the ratio.
+    Replace: true,
+
     // Which metrics the view ratios should be enabled for
     Comments: true,
     Retweets: true,
@@ -72,10 +75,17 @@ function addRatio(views, el, name) {
         return
     }
     const count = textEl.firstChild.textContent
+    if (count.includes("%")) {
+        return
+    }
     const ratio = calculateRatio(views, count)
+    if (CONFIG.Replace) {
+        textEl.firstChild.textContent = ratio
+        return
+    }
     if (textEl.childElementCount === 1) {
         const ratioSpan = createRatioSpan(ratio)
-        textEl.appendChild(ratioSpan)
+        textEl.appendChild(createRatioSpan(ratioSpan))
     } else {
         textEl.children[1].innerHTML = ratio
     }
@@ -93,29 +103,36 @@ function addMetricRatios(el) {
         if (DEBUG) console.log(`Not enough children: ${children.length} ${el.id}`)
         return
     }
-    const views = children[0].textContent
+    const views = children[3].textContent
     if (!views || views === "") {
         if (DEBUG) console.log(`No view count found for element: ${el.id}`)
         return
     }
-    if (CONFIG.Comments) addRatio(views, children[1], "comments")
-    if (CONFIG.Retweets) addRatio(views, children[2], "retweets")
-    if (CONFIG.Likes) addRatio(views, children[3], "likes")
+    if (CONFIG.Comments) addRatio(views, children[0], "comments")
+    if (CONFIG.Retweets) addRatio(views, children[1], "retweets")
+    if (CONFIG.Likes) addRatio(views, children[2], "likes")
 }
 
 function addMetricRatioForMainTweet() {
-    const viewNodeClass = ".r-1b43r93"
-    const metricsNodeClass = ".r-1dgieki"
+    const viewNodeClass = ".r-1471scf"
+    const metricsNodeClass = ".r-2sztyj"
 
     const viewNode = document.querySelector(viewNodeClass)
     if (!viewNode) {
         if (DEBUG) console.log(`No view node found: ${viewNodeClass}`)
         return
     }
-    const views = viewNode.textContent
+    if (viewNode.childNodes.length < 3 || viewNode.childNodes[2].firstChild?.textContent === "") {
+        if (DEBUG) console.log(`No view count found: ${viewNodeClass}`)
+        return
+    }
+    let views = viewNode.childNodes[2].textContent
     if (!views || views === "") {
         if (DEBUG) console.log(`No view count found for element: ${viewNodeClass}`)
         return
+    }
+    if (views.includes(" Views")) {
+        views = views.replace(" Views", "")
     }
 
     const metricsListNode = document.querySelector(metricsNodeClass)
